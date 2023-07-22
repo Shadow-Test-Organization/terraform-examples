@@ -10,4 +10,4 @@ automations:
     run:
       - action: add-reviewers@v1
         args:
-          reviewers: [Shadow-Test-Organization/a-team]
+          reviewers: [Shadow-Test-Organization/infrastructure]
