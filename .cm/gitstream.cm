@@ -10,4 +10,4 @@ automations:
     run:
       - action: add-reviewers@v1
         args:
-          reviewers: [shadowshot-x]
+          reviewers: [Shadow-Test-Organization/a-team]
