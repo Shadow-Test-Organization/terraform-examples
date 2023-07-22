@@ -6,7 +6,7 @@ manifest:
 automations:
   assign_terraform_review:
     if:
-      - {{ files | match(list=r/.*\.tf.*/) | some }}
+      - {{ files | match(regex=r/.*\.tf.*/) | some }}
     run:
       - action: add-reviewers@v1
         args:
