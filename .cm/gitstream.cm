@@ -4,8 +4,10 @@ manifest:
   version: 1.0
 
 {% set mylist = [] %}
-{% for item in terraform %}
-{% set mylist = mylist + [1] %}
+{% for pattern in terraform %}
+{% if (test_list | match(term=pattern) | nope) %}
+{% set mylist = mylist + [pattern] %}
+{% endif %}
 {% endfor %} 
 
 automations:
@@ -46,3 +48,4 @@ setvar:
   {{test_list | filter(regex=r/.*/)}}
 testvar:
   {{terraform | filter(regex=r/.*/) | reject(list=test_list)}}
+
