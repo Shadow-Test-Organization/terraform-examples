@@ -6,9 +6,12 @@ manifest:
 automations:
   review_new_terraform_module:
     if: 
+      {% set lst = [] %}
       {% for item in terraform %}
-      - {{ test_list | match(term=item) | some }} 
+      {% set lst = lst.append(test_list | match(term=item) | some) %}
+      - {{ test_list | match(term=item) | some }}
       {% endfor %}  
+      - {{lst}}
       - {{ terraform }}
       - {{ test_list }}
       - {{tffilesnotinpr}}
