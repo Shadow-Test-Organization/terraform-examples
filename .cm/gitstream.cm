@@ -7,7 +7,7 @@ automations:
   review_new_terraform_module:
     if:
       - {{ test_list }}
-      - {{ tffilesnotinpr | match(regex=r/*/) | nope}}
+      - {{ tffilesnotinpr | match(regex=r/\.tf$/) | nope}}
     run:
       - action: add-comment@v1
         args:
