@@ -3,29 +3,26 @@
 manifest:
   version: 1.0
 
+{% set arr = [] %}      
+{% for item in test_list  %}
+{% set is_matched = 1 %}
+  {% for pattern in terraform %}
+    {% if true %}
+      {{pattern}}
+      {{item}}
+      {% set is_matched=0 %}
+    {% endif %}
+  {% endfor %}
+  {% if is_matched==1 %}
+    {{item}}
+    {{ arr.append( item ) }}
+  {% endif %}
+{% endfor %}
+
 automations:
   review_new_terraform_module:
     if:
-    {% set arr = [] %}      
-    {% for item in test_list  %}
-    {% set is_matched = 1 %}
-      {% for pattern in terraform %}
-          {{ item | match(regex=pattern) | some }}
-        {% if true %}
-          {{pattern}}
-          {{item}}
-          {% set is_matched=0 %}
-        {% endif %}
-      {% endfor %}
-      {% if is_matched==1 %}
-        {{item}}
-        {{ arr.append( item ) }}
-      {% endif %}
-    {% endfor %}
-      - {{arr}}
-      
-      
-      
+      - {{arr}}    
       - {{ terraform }}
       - {{ test_list }}
       - {{tffilesnotinpr}}
