@@ -19,12 +19,12 @@ automations:
 resources:
   module_directory: 'modules'
 terraform:
-  - {{ resources.module_directory }}/main.tf
-  - {{ resources.module_directory }}/outputs.tf
-  - {{ resources.module_directory }}/providers.tf
+  - main.tf
+  - outputs.tf
+  - providers.tf
 test_list:
-  - modules/main.tf
-  - modules/outputs.tf
+  - main.tf
+  - outputs.tf
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
 tffilesnotinpr:
