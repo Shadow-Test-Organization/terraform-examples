@@ -13,23 +13,12 @@ manifest:
 automations:
   review_new_terraform_module:
     if: 
-      {% for item in terraform %}
-      - {{ test_list | match(term=item) | some }}
-      {% endfor %} 
-      - {{mylist}}
-      - {{setvar}}
-      - {{testvar}} 
-      - {{lst}}
-      - {{ terraform }}
-      - {{ test_list }}
-      - {{tffilesnotinpr}}
-      - {{ newfilesinpr }}
-      - {{ branch.diff.files_metadata }}
-      - {{ tffilesnotinpr | match(regex=r/\.tf$/) | every}}
+      - {{mylist | match(regex=r/.*/)}}
+      - {{mylist | match(regex=r/.*/) | some}}
     run:
       - action: add-comment@v1
         args:
-          comment: "{{terraform}} - {{newfilesinpr}} - {{test_list}} - {{tffilesnotinpr}}"
+          comment: "{{terraform}} - {{newfilesinpr}} - {{test_list}} - {{mylist}}"
 
 resources:
   module_directory: 'modules'
@@ -42,10 +31,4 @@ test_list:
   - modules/example/outputs.tf
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
-tffilesnotinpr:
-  {{ test_list | filter(list=terraform) }}
-setvar:
-  {{test_list | filter(regex=r/.*/)}}
-testvar:
-  {{terraform | filter(regex=r/.*/) | reject(list=test_list)}}
 
