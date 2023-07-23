@@ -3,26 +3,9 @@
 manifest:
   version: 1.0
 
-{% set arr = [] %}      
-{% for item in test_list  %}
-{% set is_matched = 1 %}
-  {% for pattern in terraform %}
-    {% if true %}
-      {{pattern}}
-      {{item}}
-      {% set is_matched=0 %}
-    {% endif %}
-  {% endfor %}
-  {% if is_matched==1 %}
-    {{item}}
-    {{ arr.append( item ) }}
-  {% endif %}
-{% endfor %}
-
 automations:
   review_new_terraform_module:
-    if:
-      - {{arr}}    
+    if:   
       - {{ terraform }}
       - {{ test_list }}
       - {{tffilesnotinpr}}
@@ -37,16 +20,13 @@ automations:
 resources:
   module_directory: 'modules'
 terraform:
-  - r/{{resources.module_directory}}\/.*\/main\.tf/
-  - r/{{resources.module_directory}}\/.*\/outputs\.tf/
-  - r/{{resources.module_directory}}\/.*\/providers\.tf/
+  - main.tf
+  - outputs.tf
+  - providers.tf
 test_list:
   - modules/example/main.tf
   - modules/example/outputs.tf
-  - modules/example/providers.tf
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
 tffilesnotinpr:
   {{ terraform | reject(list=test_list) }}
-
-
