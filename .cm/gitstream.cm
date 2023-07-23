@@ -10,7 +10,8 @@ automations:
       - {{ test_list }}
       - {{tffilesnotinpr}}
       - {{ newfilesinpr }}
-      - {{ tffilesnotinpr | match(regex=r/\.tf$/) | nope}}
+      - {{ branch.diff.files_metadata }}
+      - {{ tffilesnotinpr | match(regex=r/\.tf$/) | every}}
     run:
       - action: add-comment@v1
         args:
