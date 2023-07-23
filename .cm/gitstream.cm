@@ -13,6 +13,7 @@ manifest:
 automations:
   review_new_terraform_module:
     if: 
+      - {{mylist}}
       - {{mylist | match(regex=r/.*/) | some}}
     run:
       - action: add-comment@v1
@@ -29,4 +30,3 @@ test_list:
   - modules/example/main.tf
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
-
