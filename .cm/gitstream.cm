@@ -8,7 +8,7 @@ automations:
     if: 
       {% set lst = [] %}
       {% for item in terraform %}
-      {% set lst = lst.append(test_list | match(term=item) | some) %}
+      {% set lst = lst.append(1) %}
       - {{ test_list | match(term=item) | some }}
       {% endfor %}  
       - {{lst}}
