@@ -7,6 +7,8 @@ automations:
   review_new_terraform_module:
     if:
       - {{ test_list }}
+      - {{tffilesnotinpr}}
+      - {{ newfilesinpr }}
       - {{ tffilesnotinpr | match(regex=r/\.tf$/) | nope}}
     run:
       - action: add-comment@v1
@@ -25,4 +27,4 @@ test_list:
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
 tffilesnotinpr:
-  {{ terraform | reject(list=newfilesinpr) }}
+  {{ terraform | reject(list=test_list) }}
