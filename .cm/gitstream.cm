@@ -23,8 +23,8 @@ terraform:
   - {{ resources.module_directory }}/outputs.tf
   - {{ resources.module_directory }}/providers.tf
 test_list:
-  - "modules/main.tf"
-  - "modules/outputs.tf"
+  - modules/main.tf
+  - modules/outputs.tf
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
 tffilesnotinpr:
