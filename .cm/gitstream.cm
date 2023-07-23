@@ -19,9 +19,9 @@ automations:
 resources:
   module_directory: 'modules'
 terraform:
-  - {{ module_directory }}/main.tf
-  - {{ module_directory }}/outputs.tf
-  - {{ module_directory }}/providers.tf
+  - {{ resources.module_directory }}/main.tf
+  - {{ resources.module_directory }}/outputs.tf
+  - {{ resources.module_directory }}/providers.tf
 test_list:
   - "modules/main.tf"
   - "modules/outputs.tf"
