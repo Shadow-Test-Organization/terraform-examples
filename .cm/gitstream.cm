@@ -13,12 +13,13 @@ manifest:
 automations:
   review_new_terraform_module:
     if: 
-      - {{mylist | match(regex=r/.*/)}}
       - {{mylist | match(regex=r/.*/) | some}}
     run:
       - action: add-comment@v1
         args:
-          comment: "{{terraform}} - {{newfilesinpr}} - {{test_list}} - {{mylist}}"
+          comment: |
+          New terraform modules must contain all required components before merging. Please update your PR with the required components and gitStream will automatically remove this comment once completed. 
+          Here are the required components, {{mylist}} should be customized appropriately:
 
 resources:
   module_directory: 'modules'
@@ -28,7 +29,6 @@ terraform:
   - providers.tf
 test_list:
   - modules/example/main.tf
-  - modules/example/outputs.tf
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
 
