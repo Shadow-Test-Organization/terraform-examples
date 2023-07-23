@@ -6,6 +6,7 @@ manifest:
 automations:
   review_new_terraform_module:
     if:
+      - {{ terraform }}
       - {{ test_list }}
       - {{tffilesnotinpr}}
       - {{ newfilesinpr }}
