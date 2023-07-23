@@ -5,7 +5,10 @@ manifest:
 
 automations:
   review_new_terraform_module:
-    if:   
+    if: 
+      {% for item in terraform %}
+      - {{ test_list | match(term=item) | some }}
+      {% endfor %}  
       - {{ terraform }}
       - {{ test_list }}
       - {{tffilesnotinpr}}
@@ -29,4 +32,4 @@ test_list:
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
 tffilesnotinpr:
-  {{ terraform | reject(list=test_list) }}
+  {{ test_list | filter(list=terraform) }}
