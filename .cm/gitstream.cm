@@ -3,12 +3,18 @@
 manifest:
   version: 1.0
 
+{% set mylist = [] %}
+{% for item in terraform %}
+{% set mylist = mylist + [1] %}
+{% endfor %} 
+
 automations:
   review_new_terraform_module:
     if: 
       {% for item in terraform %}
       - {{ test_list | match(term=item) | some }}
       {% endfor %} 
+      - {{mylist}}
       - {{setvar}}
       - {{testvar}} 
       - {{lst}}
@@ -39,4 +45,4 @@ tffilesnotinpr:
 setvar:
   {{test_list | filter(regex=r/.*/)}}
 testvar:
-  {{test_list | filter(regex=r/.*/) | reject(list=terraform)}}
+  {{terraform | filter(regex=r/.*/) | reject(list=test_list)}}
