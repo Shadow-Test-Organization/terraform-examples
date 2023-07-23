@@ -6,19 +6,18 @@ manifest:
 {% set mylist = [] %}
 {% for pattern in terraform %}
 {% if (test_list | match(term=pattern) | nope) %}
-{% set mylist = mylist + [pattern] %}
+{% set mylist = mylist + [pattern+' '] %}
 {% endif %}
 {% endfor %} 
 
 automations:
   review_new_terraform_module:
     if: 
-      - {{mylist}}
       - {{mylist | match(regex=r/.*/) | some}}
     run:
       - action: add-comment@v1
         args:
-          comment: "check for comment"
+          comment: "check for comment {{mylist}}"
 
 resources:
   module_directory: 'modules'
