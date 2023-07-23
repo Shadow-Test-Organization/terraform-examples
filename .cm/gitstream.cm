@@ -18,8 +18,7 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-          New terraform modules must contain all required components before merging. Please update your PR with the required components and gitStream will automatically remove this comment once completed. 
-          Here are the required components, {{mylist}} should be customized appropriately:
+          New terraform modules must contain all required components before merging. Please update your PR with the required components and gitStream will automatically remove this comment once completed. Here are the required components, {{mylist}} should be customized appropriately:
 
 resources:
   module_directory: 'modules'
