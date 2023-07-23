@@ -6,11 +6,11 @@ manifest:
 automations:
   review_new_terraform_module:
     if: 
-      {% set lst = [] %}
       {% for item in terraform %}
-      {% set lst = lst.append(1) %}
       - {{ test_list | match(term=item) | some }}
-      {% endfor %}  
+      {% endfor %} 
+      - {{setvar}}
+      - {{testvar}} 
       - {{lst}}
       - {{ terraform }}
       - {{ test_list }}
@@ -36,3 +36,7 @@ newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
 tffilesnotinpr:
   {{ test_list | filter(list=terraform) }}
+setvar:
+  {{test_list | filter(regex=r/.*/)}}
+testvar:
+  {{test_list | filter(regex=r/.*/) | reject(list=terraform)}}
