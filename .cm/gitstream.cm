@@ -4,10 +4,25 @@ manifest:
   version: 1.0
 
 automations:
-  assign_terraform_review:
+  review_new_terraform_module:
     if:
-      - {{ files | match(list=r/.*\.tf.*) | some }}
+      - {{ test_list }}
+      - {{ tffilesnotinpr | match(regex=r/*/) | nope}}
     run:
-      - action: add-reviewers@v1
+      - action: add-comment@v1
         args:
-          reviewers: [Shadow-Test-Organization/A-Team]
+          comment: "{{terraform}} - {{newfilesinpr}} - {{test_list}} - {{tffilesnotinpr}}"
+
+resources:
+  module_directory: 'modules'
+terraform:
+  - {{ module_directory }}/main.tf
+  - {{ module_directory }}/outputs.tf
+  - {{ module_directory }}/providers.tf
+test_list:
+  - "modules/main.tf"
+  - "modules/outputs.tf"
+newfilesinpr:
+  {{ branch.diff.files_metadata | map(attr='new_file')}}
+tffilesnotinpr:
+  {{ terraform | reject(list=newfilesinpr) }}
