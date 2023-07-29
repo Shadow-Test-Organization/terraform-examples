@@ -25,6 +25,10 @@ automations:
             ├── main.tf
             ├── outputs.tf
             ├── providers.tf
+      - action: add-label@v1
+        args:
+          label: '⚠️ Missing Terraform Components'
+          color: '#FFA500'
 
 resources:
   module_directory: 'modules'
