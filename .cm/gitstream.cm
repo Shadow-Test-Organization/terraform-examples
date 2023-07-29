@@ -3,17 +3,39 @@
 manifest:
   version: 1.0
 
+{% set mylist = [] %}
+{% for pattern in terraform %}
+{% if (test_list | match(term=pattern) | nope) %}
+{% set mylist = mylist + [pattern+' '] %}
+{% endif %}
+{% endfor %} 
+
 automations:
-  review_terraform:
-    # Triggered for any changes to Terraform files
-    if:
-      - {{ files | match(regex=r/.*\.tf.*/) | some }}
-    # Assign infrastructure team as reviewer for change in Terraform files
+  review_new_terraform_module:
+    if: 
+      - {{mylist | match(regex=r/.*/) | some}}
     run:
-      - action: add-reviewers@v1
-        args:
-          reviewers: [Shadow-Test-Organization/infrastructure]
       - action: add-comment@v1
         args:
           comment: |
-            This PR affects Terraform configurations and requires a review from the Infra team.
+            New {{mylist}} terraform modules must contain all required components before merging. Please update your PR with the required components and gitStream will automatically remove this comment once completed.
+
+            Here are the required components, {{mylist}} should be customized appropriately:
+            my_module/
+            ├── main.tf
+            ├── variables.tf
+            ├── outputs.tf
+            ├── README.md
+            └── examples/
+                └── example1/
+
+resources:
+  module_directory: 'modules'
+terraform:
+  - main.tf
+  - outputs.tf
+  - providers.tf
+test_list:
+  - modules/example/main.tf
+newfilesinpr:
+  {{ branch.diff.files_metadata | map(attr='new_file')}}
