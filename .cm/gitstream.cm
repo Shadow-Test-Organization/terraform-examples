@@ -10,7 +10,7 @@ automations:
       - {{ files | match(regex=r/.*\.tf.*/) | some }}
     # Assign infrastructure team as reviewer for change in Terraform files
     run:
-      - action: require-reviewers@v1
+      - action: add-reviewers@v1
         args:
           reviewers: [Shadow-Test-Organization/infrastructure]
       - action: add-comment@v1
