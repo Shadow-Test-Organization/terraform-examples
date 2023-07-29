@@ -5,7 +5,7 @@ manifest:
 
 {% set misslist = [] %}
 {% for pattern in terraform %}
-{% if (test_list | match(term=pattern) | nope) %}
+{% if (newfilesinpr | match(term=pattern) | nope) %}
 {% set misslist = misslist + [pattern+' '] %}
 {% endif %}
 {% endfor %} 
@@ -23,7 +23,7 @@ automations:
             Here are the required components, {{misslist}} should be customized appropriately:
             my_module/
             ├── main.tf
-            ├── variables.tf
+            ├── outputs.tf
             ├── providers.tf
 
 resources:
