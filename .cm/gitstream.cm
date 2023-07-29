@@ -18,7 +18,7 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-            New {{misslist}} terraform modules must contain all required components before merging. Please update your PR with the required components and gitStream will automatically remove this comment once completed.
+            New {{newfilesinpr}} hello {{misslist}} terraform modules must contain all required components before merging. Please update your PR with the required components and gitStream will automatically remove this comment once completed.
 
             Here are the required components, {{misslist}} should be customized appropriately:
             my_module/
