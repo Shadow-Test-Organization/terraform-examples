@@ -3,31 +3,28 @@
 manifest:
   version: 1.0
 
-{% set mylist = [] %}
+{% set misslist = [] %}
 {% for pattern in terraform %}
 {% if (test_list | match(term=pattern) | nope) %}
-{% set mylist = mylist + [pattern+' '] %}
+{% set misslist = misslist + [pattern+' '] %}
 {% endif %}
 {% endfor %} 
 
 automations:
   review_new_terraform_module:
     if: 
-      - {{mylist | match(regex=r/.*/) | some}}
+      - {{misslist | match(regex=r/.*/) | some}}
     run:
       - action: add-comment@v1
         args:
           comment: |
-            New {{mylist}} terraform modules must contain all required components before merging. Please update your PR with the required components and gitStream will automatically remove this comment once completed.
+            New {{misslist}} terraform modules must contain all required components before merging. Please update your PR with the required components and gitStream will automatically remove this comment once completed.
 
-            Here are the required components, {{mylist}} should be customized appropriately:
+            Here are the required components, {{misslist}} should be customized appropriately:
             my_module/
             ├── main.tf
             ├── variables.tf
-            ├── outputs.tf
-            ├── README.md
-            └── examples/
-                └── example1/
+            ├── providers.tf
 
 resources:
   module_directory: 'modules'
