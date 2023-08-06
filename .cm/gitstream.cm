@@ -16,6 +16,8 @@ automations:
       - {{misslist | match(regex=r/.*/) | some}}
       - {{newfilesinpr}}
       - {{ source.diff.files | filter(term = "main.tf")}}
+      - {{ source.diff.files | filter(term = "main.tf") | map(attr='original_file') }}
+      - {{ source.diff.files | filter(term = "main.tf") | map(attr='original_file') | match(regex=r/^$/) | some }}
       - {{isnewmodule}}
     run:
       - action: add-comment@v1
@@ -39,6 +41,5 @@ terraform:
   - main.tf
   - outputs.tf
   - providers.tf
-isnewmodule: {{ source.diff.files | filter(term = "main.tf") | map(attr='original_file') | match(regex=r/^$/) | some }}
 newfilesinpr:
-  {{ source.diff.files | map(attr='new_file')}}
+  {{ branch.diff.files_metadata | map(attr='new_file')}}
