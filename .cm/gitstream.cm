@@ -12,10 +12,11 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-            {{source.diff.files | dump | safe}} and {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | dump | safe }}
+            {{source.diff.files | dump | safe}} and {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | nope | dump | safe }}
+            and {{source.diff.files | map(attr="new_content") | includes(list=allowlist) | dump | safe }}
 
 newcontent: {{source.diff.files | map(attr="new_content")}}
-sourceformat : {{newcontent | match(regex=r/source.*?=.*\?ref=v.*/)}}
+sourceformat : {{source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/)}}
 
 allowlist:
   - 'https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git'
