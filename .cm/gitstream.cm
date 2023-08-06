@@ -6,7 +6,7 @@ manifest:
 automations:
   check:
     if: 
-      - true
+      - {{source.diff.files | isFormattingChange}}
     run:
       - action: add-label@v1
         args:
