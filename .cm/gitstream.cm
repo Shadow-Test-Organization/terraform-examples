@@ -11,4 +11,4 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-            {{source.diff.files | dump | safe}}
+            {{source.diff.files | dump | safe}} and {{ source.diff.files | map(attr="new_content") | dump | safe }}
