@@ -11,4 +11,4 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-            {{ source.diff.files | map(attr="new_content") }}
+            {{ source.diff.files | map(attr="diff") }}
