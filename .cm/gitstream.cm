@@ -7,7 +7,7 @@ automations:
   check:
     if: 
       - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=.*\?ref=v.*/) | nope }}
-      - {{ source.diff.files | match(attr='new_content', list=allowlist) | some }}
+      - {{ source.diff.files | match(attr='new_content', list=allowlist) | nope }}
     run:
       - action: request-changes@v1
         args:
