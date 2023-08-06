@@ -6,12 +6,15 @@ manifest:
 automations:
   check:
     if: 
+      - {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | nope }}
       - {{source.diff.files | isFormattingChange}}
+      - {{source.diff.files | map(attr="new_content") | includes(list=allowlist) | some }}
     run:
       - action: add-comment@v1
         args:
           comment: |
-            {{source.diff.files | dump | safe}} and {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | nope }} and {{source.diff.files | map(attr="new_content") | includes(list=allowlist) }}
+            {{source.diff.files | dump | safe}} and {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | nope }} and {{newcontent | includes(list=allowlist) }}
 
+newcontent : {{source.diff.files | map(attr="new_content")}}
 allowlist:
   - 'https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git'
