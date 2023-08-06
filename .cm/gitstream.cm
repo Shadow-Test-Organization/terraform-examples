@@ -7,7 +7,7 @@ automations:
   check:
     if: 
       - {{source.diff.files | isFormattingChange}}
-      - {{source.diff.files}}
+      - {{source.diff.files | map(attr='new_content')}}
     run:
       - action: add-label@v1
         args:
