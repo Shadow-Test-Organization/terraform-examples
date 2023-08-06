@@ -14,7 +14,7 @@ automations:
   review_new_terraform_module:
     if: 
       - {{misslist | match(regex=r/.*/) | some}}
-      - {{(newfilesinpr}}
+      - {{newfilesinpr}}
       - {{ source.diff.files | filter(term = "main.tf")}}
       - {{isnewmodule}}
     run:
