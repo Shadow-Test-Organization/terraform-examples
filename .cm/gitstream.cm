@@ -16,6 +16,8 @@ automations:
       - {{misslist | match(regex=r/.*/) | some}}
       - {{newfilesinpr}}
       - {{source.diff.files | map(attr='original_file') | match(term = "main.tf") | some }}
+      - {{source.diff.files | map(attr='original_file') | filter(term = "main.tf")}}
+      - {{ source.diff.files | map(attr='original_file') | filter(term = "main.tf" | match(regex=r/^$/) }}
     run:
       - action: add-comment@v1
         args:
