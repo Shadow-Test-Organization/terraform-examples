@@ -8,7 +8,7 @@ automations:
     if: 
       - true
     run:
-      - action: add-comment@v1
+      - action: add-label@v1
         args:
-          comment: |
-            {{ source.diff.files | map(attr="diff") }}
+          label: 'new-contributor'
+          color: '#FBBD10'
