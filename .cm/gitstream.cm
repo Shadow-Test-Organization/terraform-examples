@@ -7,13 +7,11 @@ automations:
   check:
     if: 
       - {{ source.diff.files | match(attr='diff', regex=r/source.*?=.*\?ref=v.*/) | nope }}
-      - {{source.diff.files | isFormattingChange}}
     run:
       - action: add-comment@v1
         args:
           comment: |
             {{source.diff.files | map(attr="new_content") | includes(list=allowlist) }} and {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | nope }}
 
-newcontent : {{source.diff.files | map(attr="new_content")}}
 allowlist:
   - 'https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git'
