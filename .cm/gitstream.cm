@@ -6,7 +6,7 @@ manifest:
 automations:
   check:
     if: 
-      - {{ source.diff.files | match(attr='diff', regex=r/source.*?=.*\?ref=v.*/) | nope }}
+      - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=.*\?ref=v.*/) | nope }}
     run:
       - action: add-comment@v1
         args:
