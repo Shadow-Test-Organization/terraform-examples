@@ -7,14 +7,15 @@ automations:
   check:
     if: 
       - {{source.diff.files | isFormattingChange}}
-      - {{newcontent | match(list=allowlist) | some}}
+      - {{newcontent | includes(list=allowlist) | some}}
     run:
       - action: add-comment@v1
         args:
           comment: |
             {{source.diff.files | dump | safe}} and {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | dump | safe }}
 
-newcontent: source.diff.files | map(attr="new_content")
+newcontent: {{source.diff.files | map(attr="new_content")}}
+sourceformat : {{newcontent | match(regex=r/source.*?=.*\?ref=v.*/)}}
 
 allowlist:
   - 'https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git'
