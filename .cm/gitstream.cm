@@ -8,12 +8,11 @@ automations:
     if: 
       - {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | nope }}
       - {{source.diff.files | isFormattingChange}}
-      - {{source.diff.files | map(attr="new_content") | includes(list=allowlist) | some }}
     run:
       - action: add-comment@v1
         args:
           comment: |
-            {{source.diff.files | dump | safe}} and {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | nope }}
+            {{source.diff.files | map(attr="new_content") | includes(list=allowlist) }} and {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | nope }}
 
 newcontent : {{source.diff.files | map(attr="new_content")}}
 allowlist:
