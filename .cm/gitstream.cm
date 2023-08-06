@@ -15,10 +15,7 @@ automations:
     if: 
       - {{misslist | match(regex=r/.*/) | some}}
       - {{newfilesinpr}}
-      - {{ source.diff.files | filter(term = "main.tf")}}
-      - {{ source.diff.files | filter(term = "main.tf") | map(attr='original_file') }}
-      - {{ source.diff.files | filter(term = "main.tf") | map(attr='original_file') | match(regex=r/^$/) | some }}
-      - {{isnewmodule}}
+      - {{source.diff.files}}
     run:
       - action: add-comment@v1
         args:
