@@ -14,6 +14,9 @@ automations:
   review_new_terraform_module:
     if: 
       - {{misslist | match(regex=r/.*/) | some}}
+      - {{newfilesinpr}}
+      - {{ source.diff.files | filter(term = "main.tf")}}
+      - {{isnewmodule}}
     run:
       - action: add-comment@v1
         args:
@@ -36,5 +39,6 @@ terraform:
   - main.tf
   - outputs.tf
   - providers.tf
+isnewmodule: {{ source.diff.files | filter(term = "main.tf") | map(attr='original_file') | match(regex=r/^$/) | some }}
 newfilesinpr:
-  {{ branch.diff.files_metadata | map(attr='new_file')}}
+  {{ source.diff.files | map(attr='new_file')}}
