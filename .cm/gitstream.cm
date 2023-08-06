@@ -9,10 +9,10 @@ automations:
       - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=.*\?ref=v.*/) | nope }}
       - {{ source.diff.files | match(attr='new_content', list=allowlist) | some }}
     run:
-      - action: add-comment@v1
+      - action: request-changes@v1
         args:
           comment: |
-            {{source.diff.files | map(attr="new_content") | includes(list=allowlist) }} and {{ source.diff.files | map(attr="new_content") | match(regex=r/source.*?=.*\?ref=v.*/) | nope }}
+            You must reference a specific version when accessing Terraform module sources via URL, e.g. `?ref=v1.0.0`. Please update your Terraform files to follow this practice.
 
 allowlist:
   - 'https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git'
