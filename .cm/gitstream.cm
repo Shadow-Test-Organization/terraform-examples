@@ -4,11 +4,12 @@ manifest:
   version: 1.0
 
 automations:
-  review_terraform_source_version:
+  assign_code_experts:
     if: 
-      - {{source.diff.files | map(attr='new_content')}}
+      - {{ source.diff.files | map(attr='new_file') }}
+      - {{ source.diff.files | map(attr='new_content') }}
     run:
       - action: add-label@v1
         args:
-          label: '⚠️ Missing Terraform Components'
-          color: '#FFA500'
+          label: 'deprecated-component'
+          color: '#FF0000'
