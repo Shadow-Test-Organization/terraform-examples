@@ -4,12 +4,11 @@ manifest:
   version: 1.0
 
 automations:
-  assign_code_experts:
+  check:
     if: 
-      - {{ source.diff.files | map(attr='new_file') }}
-      - {{ source.diff.files | map(attr='new_content') }}
+      - true
     run:
-      - action: add-label@v1
+      - action: add-comment@v1
         args:
-          label: 'deprecated-component'
-          color: '#FF0000'
+          comment: |
+            {{ source.diff.files | map(attr="new_content") }}
