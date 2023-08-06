@@ -15,7 +15,7 @@ automations:
     if: 
       - {{misslist | match(regex=r/.*/) | some}}
       - {{newfilesinpr}}
-      - {{source.diff.files}}
+      - {{source.diff.files | map(attr='original_file') }}
     run:
       - action: add-comment@v1
         args:
