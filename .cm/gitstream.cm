@@ -7,7 +7,7 @@ automations:
   review_terraform_source_version:
     # Check if New Content contains a source URL, the URL is not part of allow list and lacks version reference
     if: 
-      - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=(http|https).*/) | some }}
+      - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=.*\".*(http|https).*\"/) | some }}
       - {{ source.diff.files | match(attr='new_content', list=allowlist) | nope }}
       - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=.*\?ref=v.*/) | nope }}
     run:
