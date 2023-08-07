@@ -4,10 +4,12 @@ manifest:
   version: 1.0
 
 automations:
-  check:
+  review_terraform_source_version:
+    # Check if New Content contains and source URL, That URL is not part of allow list and lacks version referenece
     if: 
+      - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=(http|https)/) | some }}
+      - {{ source.diff.files | match(attr='new_content', list=allowlist) | nope }}
       - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=.*\?ref=v.*/) | nope }}
-      - {{ source.diff.files | match(attr='new_content', list=allowlist) | some }}
     run:
       - action: request-changes@v1
         args:
@@ -16,3 +18,5 @@ automations:
 
 allowlist:
   - 'https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git'
+  - 'https://github.com/terraform-aws-modules/terraform-aws-vpc.git'
+  - 'https://github.com/terraform-aws-modules/terraform-aws-eks.git'
