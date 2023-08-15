@@ -17,7 +17,7 @@ automations:
   review_new_terraform_module:
     if: 
       - {{is.mainfile and is.mainfilenotinroot}}
-      - {{prefixcheck | match(term='true') | some}}
+      - {{prefixcheck | match(term='true') | nope}}
       - {{newfilesinpr | match(list=terraform.keywords) | some}}
     run:
       - action: request-changes@v1
