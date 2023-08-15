@@ -30,7 +30,7 @@ automations:
 module_location: infrastructure/modules/
 terraform:
   prefixes: ['aws', 'gcp', 'azure']
-  keywords: ['db', 'networking', 'security', 'module']
+  keywords: ['db', 'networking', 'security']
 
 is:
   mainfile: {{newfilesinpr | match(term = "main.tf") | some}}
