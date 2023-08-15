@@ -3,6 +3,13 @@
 manifest:
   version: 1.0
 
+{% set misslist = [] %}
+{% for pattern in terraform %}
+{% if (newfilesinpr | match(term=pattern) | nope) %}
+{% set misslist = misslist + [pattern+' '] %}
+{% endif %}
+{% endfor %} 
+
 automations:
   review_new_terraform_module:
     if: 
@@ -17,7 +24,7 @@ automations:
           color: '#FFA500'
 
 variable1: hello/world
-check1: {{variable1.split("/")}}
+check1: {{variable1 | split("/")}}
 check2: {{check1[0]}}
 check3: {{check1[1]}}
 terraform:
