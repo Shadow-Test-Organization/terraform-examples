@@ -5,14 +5,17 @@ manifest:
 
 {% set misslist = [] %}
 {% for pattern in terraform.prefixes %}
-{% if(newfilesinpr | match(term='abc' + pattern) | nope) %}
-{% set misslist = misslist + [module_location + pattern]%}
+{% if(newfilesinpr | match(term=module_location + pattern) | some) %}
+{% set misslist = misslist + [true]%}
+{% else %}
+{% set misslist = misslist + [false]  %}
 {% endif %}
 {% endfor %}
 automations:
   review_new_terraform_module:
     if: 
       - {{misslist}}
+      - {{misslist | some}}
       - {{newfilesinpr}}
     run:
       - action: add-label@v1
