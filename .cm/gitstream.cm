@@ -3,14 +3,12 @@
 manifest:
   version: 1.0
 
-{% set list1 = variable1.split('/') %}
-{% set module_name = list1[1] %}
-
 automations:
   review_new_terraform_module:
     if: 
-      - {{module_name}}
-      - {{list1}}
+      - {{check1}}
+      - {{check2}}
+      - {{check3}}
       - {{module_name | includes(list=terraform.keywords)}}
     run:
       - action: add-label@v1
@@ -19,6 +17,9 @@ automations:
           color: '#FFA500'
 
 variable1: hello/world
+check1: {{variable1.split("/")}}
+check2: {{check1[0]}}
+check3: {{check1[1]}}
 terraform:
   prefixes: ['aws', 'gcp', 'azure']
   keywords: ['db', 'networking', 'security']
