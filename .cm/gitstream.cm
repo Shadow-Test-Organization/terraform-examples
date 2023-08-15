@@ -3,20 +3,22 @@
 manifest:
   version: 1.0
 
-automations:
-  review_terraform_source_version:
-    # Check if New Content contains a source URL, the URL is not part of allow list and lacks version reference
-    if: 
-      - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=.*\".*(http|https).*\"/) | some }}
-      - {{ source.diff.files | match(attr='new_content', list=allowlist) | nope }}
-      - {{ source.diff.files | match(attr='new_content', regex=r/source.*?=.*\?ref=v.*/) | nope }}
-    run:
-      - action: request-changes@v1
-        args:
-          comment: |
-            You must reference a specific version when accessing Terraform module sources via URL, e.g. `?ref=v1.0.0`. Please update your Terraform files to follow this practice.
+{% set list1 = variable1.split('/') %}
+{% set module_name = list1[1] %}
 
-allowlist:
-  - 'https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git'
-  - 'https://github.com/terraform-aws-modules/terraform-aws-vpc.git'
-  - 'https://github.com/terraform-aws-modules/terraform-aws-eks.git'
+automations:
+  review_new_terraform_module:
+    if: 
+      - {{module_name}}
+      - {{list1}}
+      - {{module_name | includes(list=terraform.keywords)}}
+    run:
+      - action: add-label@v1
+        args:
+          label: '⚠️ Missing Terraform Components'
+          color: '#FFA500'
+
+variable1: hello/world
+terraform:
+  prefixes: ['aws', 'gcp', 'azure']
+  keywords: ['db', 'networking', 'security']
