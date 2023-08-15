@@ -26,7 +26,7 @@ automations:
 module_name: hello/world
 module_location: infrastructure/modules/
 terraform:
-  prefixes: ['aws', 'gcp', 'azure']
+  prefixes: ['aws', 'gcp', 'azure', 'test']
   keywords: ['db', 'networking', 'security']
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
