@@ -4,29 +4,25 @@ manifest:
   version: 1.0
 
 {% set misslist = [] %}
-{% for pattern in terraform %}
-{% if (newfilesinpr | match(term=pattern) | nope) %}
-{% set misslist = misslist + [pattern+' '] %}
+{% for pattern in terraform.prefixes %}
+{% if(newfilesinpr | match(term='abc' + pattern) | nope) %}
+{% misslist = misslist + [pattern + ' - ' + newfilesinpr]%}
 {% endif %}
-{% endfor %} 
-
+{% endfor %}
 automations:
   review_new_terraform_module:
     if: 
-      - {{check1}}
-      - {{check2}}
-      - {{check3}}
-      - {{module_name | includes(list=terraform.keywords)}}
+      - {{misslist}}
+      - {{newfilesinpr}}
     run:
       - action: add-label@v1
         args:
           label: '⚠️ Missing Terraform Components'
           color: '#FFA500'
 
-variable1: hello/world
-check1: {{variable1 | split("/")}}
-check2: {{check1[0]}}
-check3: {{check1[1]}}
+module_name: hello/world
 terraform:
   prefixes: ['aws', 'gcp', 'azure']
   keywords: ['db', 'networking', 'security']
+newfilesinpr:
+  {{ branch.diff.files_metadata | map(attr='new_file')}}
