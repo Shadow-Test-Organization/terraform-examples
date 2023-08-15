@@ -17,8 +17,7 @@ automations:
   review_new_terraform_module:
     if: 
       - {{is.mainfile and is.mainfilenotinroot}}
-      - {{prefixcheck | match(term='true') | nope}}
-      - {{newfilesinpr | match(list=terraform.keywords) | nope}}
+      - {{module_name_checks.prefix or module_name_checks.keyword}}
     run:
       - action: request-changes@v1
         args:
@@ -26,6 +25,10 @@ automations:
             Terraform module names must contain a required prefix and keyword:
             * Prefixes: {{ terraform.prefixes }}
             * Keywords: {{ terraform.keywords }}
+
+module_name_checks:
+  prefix: {{prefixcheck | match(term='true') | nope}}
+  keyword: {{newfilesinpr | match(list=terraform.keywords) | nope}}
 
 module_location: infrastructure/modules/
 terraform:
