@@ -10,4 +10,4 @@ automations:
     run:
       - action: add-comment@v1
         args:
-          comment: hello {{pr.title | capture(regex=r/\b[A-Za-z]+-\d+\b/)}}
+          comment: hello world {{pr.title | capture(regex=r/\b[A-Za-z]+-\d+\b/)}}
