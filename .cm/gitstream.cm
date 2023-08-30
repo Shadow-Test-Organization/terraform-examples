@@ -3,40 +3,32 @@
 manifest:
   version: 1.0
 
-# Prefix Check Logic
-{% set prefixcheck = [] %}
-{% for pattern in terraform.prefixes %}
-{% if(newfilesinpr | match(term=module_location + pattern) | some) %}
-{% set prefixcheck = prefixcheck + [true]%}
-{% else %}
-{% set prefixcheck = prefixcheck + [false]  %}
-{% endif %}
-{% endfor %}
-
 automations:
-  review_new_terraform_module:
-    if: 
-      - {{is.mainfile and is.mainfilenotinroot}}
-      - {{module_name_checks.prefix or module_name_checks.keyword}}
+  comment_issue_tracker:
+    if:
+      - true
     run:
-      - action: request-changes@v1
+      - action: add-comment@v1
         args:
-          comment: |
-            Terraform module names must contain a required prefix and keyword:
-            * Prefixes: {{ terraform.prefixes }}
-            * Keywords: {{ terraform.keywords }}
+          comment: hello {{has.jira_ticket_in_title}}
 
-module_name_checks:
-  prefix: {{prefixcheck | match(term='true') | nope}}
-  keyword: {{newfilesinpr | match(list=terraform.keywords) | nope}}
+has:
+  jira_ticket_in_title: {{ pr.title | capture(regex=r/\b[A-Za-z]+-\d+\b/) }}
+  jira_ticket_in_desc: {{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}
 
-module_location: infrastructure/modules/
-terraform:
-  prefixes: ['aws', 'gcp', 'azure']
-  keywords: ['db', 'networking', 'security']
+has:
+  jira:
+    ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
+    ticket_in_desc: {{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}
+  asana:
+    ticket_in_title: {{ pr.title | includes(regex=r//) }}
+    ticket_in_desc: {{ pr.description | includes(regex=r/app\.asana.\com\/(\d+)\/(\d+)\/(\d+)\/(\d+)\/(\d+)/) }}
+  azure:
+    ticket_in_title: {{ pr.title | includes(regex=r//) }}
+    ticket_in_desc: {{ pr.description | includes(regex=r/(dev\.azure\.com|@{organization}\.visualstudio\.com)\/(\w+)\/(\w+)\/_workitems\/edit\/(?\d+)/) }}
+  shortcut:
+    ticket_in_title: {{ pr.title | includes(regex=r//) }}
+    ticket_in_desc: {{ pr.description | includes(regex=r/(app\.shortcut\.com)\/(\w+)\/story\/(\d+)\/(\w+)/) }}
 
-is:
-  mainfile: {{newfilesinpr | match(term = "main.tf") | some}}
-  mainfilenotinroot: {{source.diff.files | map(attr='original_file') | match(term = "main.tf") | nope }}
-newfilesinpr:
-  {{ branch.diff.files_metadata | map(attr='new_file')}}
+# https://app.shortcut.com/shadow-2/story/17/sample-story-3
+provider: jira
