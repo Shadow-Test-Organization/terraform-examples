@@ -25,7 +25,7 @@ has:
     ticket_in_desc: {{ pr.description | includes(regex=r/app\.asana.\com\/(\d+)\/(\d+)\/(\d+)\/(\d+)\/(\d+)/) }}
   azure:
     ticket_in_title: {{ pr.title | includes(regex=r//) }}
-    ticket_in_desc: {{ pr.description | includes(regex=r/(dev\.azure\.com|@{organization}\.visualstudio\.com)\/(\w+)\/(\w+)\/_workitems\/edit\/(?\d+)/) }}
+    ticket_in_desc: {{ pr.description | includes(regex=r//) }}
   shortcut:
     ticket_in_title: {{ pr.title | includes(regex=r//) }}
     ticket_in_desc: {{ pr.description | includes(regex=r/(app\.shortcut\.com)\/(\w+)\/story\/(\d+)\/(\w+)/) }}
