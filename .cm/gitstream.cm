@@ -10,25 +10,4 @@ automations:
     run:
       - action: add-comment@v1
         args:
-          comment: hello {{hastest.jira_ticket_in_title}}
-
-hastest:
-  jira_ticket_in_title: {{ pr.title | capture(regex=r/\b[A-Za-z]+-\d+\b/) }}
-  jira_ticket_in_desc: {{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}
-
-has:
-  jira:
-    ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
-    ticket_in_desc: {{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}
-  asana:
-    ticket_in_title: {{ pr.title | includes(regex=r//) }}
-    ticket_in_desc: {{ pr.description | includes(regex=r/app\.asana.\com\/(\d+)\/(\d+)\/(\d+)\/(\d+)\/(\d+)/) }}
-  azure:
-    ticket_in_title: {{ pr.title | includes(regex=r//) }}
-    ticket_in_desc: {{ pr.description | includes(regex=r//) }}
-  shortcut:
-    ticket_in_title: {{ pr.title | includes(regex=r//) }}
-    ticket_in_desc: {{ pr.description | includes(regex=r/(app\.shortcut\.com)\/(\w+)\/story\/(\d+)\/(\w+)/) }}
-
-# https://app.shortcut.com/shadow-2/story/17/sample-story-3
-provider: jira
+          comment: hello {{pr.title | capture(regex=r/\b[A-Za-z]+-\d+\b/)}}
