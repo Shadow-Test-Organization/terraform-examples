@@ -6,14 +6,15 @@ manifest:
 automations:
   comment_issue_tracker:
     if:
-      - {{ has.ticket_in_title_or_branch }}
+      - {{ has.ticket_in_title or has.ticket_in_branch }}
     run:
       - action: add-comment@v1
         args:
           comment: Issue Tracker Link Reference - [{{ticketid}}]({{tracker[provider].baseurl}}{{ticketid}})
 
 has:
-  ticket_in_title_or_branch: {{ (pr.title | includes(regex=tracker[provider].pattern) ) or (branch.name | includes(regex=tracker[provider].pattern))}}
+  ticket_in_title: {{ pr.title | includes(regex=tracker[provider].pattern) }}
+  ticket_in_branch: {{ branch.name | includes(regex=tracker[provider].pattern)))}}
 
 tracker:
   jira:
@@ -35,9 +36,9 @@ ticketidfromtitle: {{pr.title | capture(regex=tracker[provider].pattern)}}
 ticketidfrombranch: {{branch.name | capture(regex=tracker[provider].pattern)}}
 
 {% set ticketid="" %}
-{% if (pr.title | includes(regex=tracker[provider].pattern)) %}
-{% ticketid=ticketidfromtitle %}
-{% elif (branch.name | includes(regex=tracker[provider].pattern)) %}
-{% ticketid=ticketidfrombranch %}
+{% if has.ticket_in_title %}
+{% set ticketid=ticketidfromtitle %}
+{% elif has.ticket_in_branch %}
+{% set ticketid=ticketidfrombranch %}
 {% endif %}
 
