@@ -15,7 +15,7 @@ automations:
 
 has:
   ticket_in_title: {{ pr.title | includes(regex=tracker[provider].pattern) }}
-  ticket_in_branch: {{ branch.name | includes(regex=tracker[provider].pattern)))}}
+  ticket_in_branch: {{ branch.name | includes(regex=tracker[provider].pattern) }}
 
 tracker:
   jira:
