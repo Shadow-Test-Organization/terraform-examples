@@ -7,7 +7,7 @@ automations:
   comment_issue_tracker:
     if:
       - {{ has.ticket_in_title or has.ticket_in_branch }}
-      - {{ [ticketidfromtitle, ticketidfrombranch] | filter(r/.+/) }}
+      - {{ [ticketidfromtitle, ticketidfrombranch] | filter(regex=r/.+/) }}
     run:
       - action: add-comment@v1
         args:
