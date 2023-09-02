@@ -3,7 +3,7 @@
 manifest:
   version: 1.0
 
-{% if(pr.title | includes(regex=tracker[provider].pattern)) %}
+{% if(has.ticket_in_title) %}
 {% set ticketid = pr.title %}
 {% endif %}
 
@@ -11,7 +11,6 @@ automations:
   comment_issue_tracker:
     if:
       - {{ has.ticket_in_title or has.ticket_in_branch }}
-      - {{ [ticketidfromtitle, ticketidfrombranch] | filter(regex=r/.+/) }}
     run:
       - action: add-comment@v1
         args:
