@@ -3,28 +3,32 @@
 manifest:
   version: 1.0
 
+{% if ( has[provider].ticket_in_title) %}
+{% set ticketid =  %}
+{% endif %}
+
 automations:
   comment_issue_tracker:
     if:
-      - {{ has[provider].ticket_in_title}}
+      - {{ has[provider].ticket_in_title or has[provider].ticket_in_branch}}
     run:
       - action: add-comment@v1
         args:
-          comment: check [{{ticketid}}]({{baseurl[provider]}}{{ticketid}})
+          comment: Issue Tracker Link - [{{ticketid}}]({{baseurl[provider]}}{{ticketid}})
 
 has:
   jira:
     ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
-    ticket_in_desc: {{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}
+    ticket_in_branch: {{ branch.name | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
   asana:
     ticket_in_title: {{ pr.title | includes(regex=r/asana-(\d+)/) }}
-    ticket_in_desc: {{ pr.description | includes(regex=r/app\.asana.\com\/(\d+)\/(\d+)\/(\d+)\/(\d+)\/(\d+)/) }}
+    ticket_in_branch: {{ branch.name | includes(regex=r/asana-(\d+)/) }}
   azure:
     ticket_in_title: {{ pr.title | includes(regex=r/(\w+)-(\w+)-(\d+)/) }}
-    ticket_in_desc: {{ pr.description | includes(regex=r/(dev\.azure\.com|(\w+)\.visualstudio\.com)\/(\w+)\/(\w+)\/_workitems\/edit\/(\d+)/) }}
+    ticket_in_branch: {{ branch.name | includes(regex=r/(\w+)-(\w+)-(\d+)/) }}
   shortcut:
     ticket_in_title: {{ pr.title | includes(regex=r/(\w+)\/sc-(\d+)/) }}
-    ticket_in_desc: {{ pr.description | includes(regex=r/(app\.shortcut\.com)\/(\w+)\/story\/(\d+)\/(\w+)/) }}
+    ticket_in_branch: {{ branch.name | includes(regex=r/(\w+)\/sc-(\d+)/) }}
 
 baseurl:
   jira: https://testorg.atlassian.net/browse/
@@ -32,5 +36,12 @@ baseurl:
   azure: https://dev.azure.com/testorg/testproj/_workitems/
   shortcut: https://app.shortcut.com/testorg/story/
 
+regexlist:
+  jira: r/\b[A-Za-z]+-\d+\b/
+  asana: r/asana-(\d+)/
+  azure: r/(\w+)-(\w+)-(\d+)/
+  shortcut: r/(\w+)\/sc-(\d+)/
+
+ticketid: {{pr.title | capture(regex=regexlist[provider]) }}
+
 provider: jira
-ticketid: {{pr.title | capture(regex=r/\b[A-Za-z]+-\d+\b/) }}
