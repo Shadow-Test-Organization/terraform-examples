@@ -3,6 +3,10 @@
 manifest:
   version: 1.0
 
+{% if(pr.title | includes(regex=tracker[provider].pattern)) %}
+{% set ticketid = pr.title %}
+{% endif %}
+
 automations:
   comment_issue_tracker:
     if:
@@ -35,4 +39,3 @@ provider: jira
 
 ticketidfromtitle: {{pr.title | capture(regex=tracker[provider].pattern)}}
 ticketidfrombranch: {{branch.name | capture(regex=tracker[provider].pattern)}}
-
