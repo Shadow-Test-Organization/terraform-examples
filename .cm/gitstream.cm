@@ -34,7 +34,7 @@ provider: jira
 ticketidfromtitle: {{pr.title | capture(regex=tracker[provider].pattern)}}
 ticketidfrombranch: {{branch.name | capture(regex=tracker[provider].pattern)}}
 
-
+{% set ticketid="" %}
 {% if (pr.title | includes(regex=tracker[provider].pattern)) %}
 {% ticketid=ticketidfromtitle %}
 {% elif (branch.name | includes(regex=tracker[provider].pattern)) %}
