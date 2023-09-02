@@ -10,7 +10,7 @@ automations:
     run:
       - action: add-comment@v1
         args:
-          comment: {{pr.title | capture(regex=r/\b[A-Za-z]+-\d+\b/) }}
+          comment: [{{ticketid}}]({{baseurl[provider]}}{{ticketid}})
 
 has:
   jira:
@@ -26,4 +26,11 @@ has:
     ticket_in_title: {{ pr.title | includes(regex=r/(\w+)\/sc-(\d+)/) }}
     ticket_in_desc: {{ pr.description | includes(regex=r/(app\.shortcut\.com)\/(\w+)\/story\/(\d+)\/(\w+)/) }}
 
+baseurl:
+  jira: https://testorg.atlassian.net/browse/
+  asana: https://app.asana.com/0/0/0/
+  azure: https://dev.azure.com/testorg/testproj/_workitems/
+  shortcut: https://app.shortcut.com/testorg/story/
+
 provider: jira
+ticketid: {{pr.title | capture(regex=r/\b[A-Za-z]+-\d+\b/) }}
