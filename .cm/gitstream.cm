@@ -3,12 +3,6 @@
 manifest:
   version: 1.0
 
-{% if (pr.title | includes(regex=tracker[provider].regexlist) %}
-{% set ticketid= pr.title | capture(regex=tracker[provider].regexlist) %}
-{% elif (branch.name | includes(regex=tracker[provider].regexlist) %}
-{% set ticketid= branch.name | capture(regex=tracker[provider].regexlist) %}
-{% endif %}
-
 automations:
   comment_issue_tracker:
     if:
@@ -36,3 +30,5 @@ tracker:
     regexlist: r/(\w+)\/sc-(\d+)/
 
 provider: jira
+
+ticketid: {{pr.title | includes(regex=regexlist[provider])}}
