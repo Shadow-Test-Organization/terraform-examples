@@ -13,7 +13,7 @@ automations:
           comment: Issue Tracker Link Reference - [{{ticketid}}]({{tracker[provider].baseurl}}{{ticketid}})
 
 has:
-  ticket_in_title_or_branch: {{ (pr.title | includes(regex=tracker[provider].pattern) ) or (branch.name | includes(regex=tracker[provider].pattern)}}
+  ticket_in_title_or_branch: {{ (pr.title | includes(regex=tracker[provider].pattern) ) or (branch.name | includes(regex=tracker[provider].pattern))}}
 
 tracker:
   jira:
