@@ -3,9 +3,6 @@
 manifest:
   version: 1.0
 
-{% if ( has[provider].ticket_in_title) %}
-{% set ticketid =  %}
-{% endif %}
 
 automations:
   comment_issue_tracker:
