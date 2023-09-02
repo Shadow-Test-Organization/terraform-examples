@@ -13,22 +13,22 @@ automations:
           comment: Issue Tracker Link Reference - [{{ticketid}}]({{tracker[provider].baseurl}}{{ticketid}})
 
 has:
-  ticket_in_title_or_branch: {{ (pr.title | includes(regex=regexlist[provider]) ) or (branch.name | includes(regex=regexlist[provider])}}
+  ticket_in_title_or_branch: {{ (pr.title | includes(regex=tracker[provider].pattern) ) or (branch.name | includes(regex=tracker[provider].pattern)}}
 
 tracker:
   jira:
     baseurl: https://testorg.atlassian.net/browse/
-    regexlist: r/\b[A-Za-z]+-\d+\b/
+    pattern: r/\b[A-Za-z]+-\d+\b/
   asana:
     baseurl: https://app.asana.com/0/0/0/
-    regexlist: r/asana-(\d+)/
+    pattern: r/asana-(\d+)/
   azure:
     baseurl: https://dev.azure.com/testorg/testproj/_workitems/
-    regexlist: r/(\w+)-(\w+)-(\d+)/
+    pattern: r/(\w+)-(\w+)-(\d+)/
   shortcut:
     baseurl: https://app.shortcut.com/testorg/story/
-    regexlist: r/(\w+)\/sc-(\d+)/
+    pattern: r/(\w+)\/sc-(\d+)/
 
 provider: jira
 
-ticketid: {{pr.title | includes(regex=regexlist[provider])}}
+ticketid: {{pr.title | includes(regex=tracker[provider].pattern)}}
