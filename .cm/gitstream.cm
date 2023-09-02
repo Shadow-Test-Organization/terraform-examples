@@ -7,6 +7,7 @@ automations:
   comment_issue_tracker:
     if:
       - {{ has.ticket_in_title or has.ticket_in_branch }}
+      - {{ [ticketidfromtitle, ticketidfrombranch] | filter(r/.+/) }}
     run:
       - action: add-comment@v1
         args:
@@ -34,11 +35,4 @@ provider: jira
 
 ticketidfromtitle: {{pr.title | capture(regex=tracker[provider].pattern)}}
 ticketidfrombranch: {{branch.name | capture(regex=tracker[provider].pattern)}}
-
-{% set ticketid="" %}
-{% if has.ticket_in_title %}
-{% set ticketid=ticketidfromtitle %}
-{% elif has.ticket_in_branch %}
-{% set ticketid=ticketidfrombranch %}
-{% endif %}
 
