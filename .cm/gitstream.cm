@@ -3,9 +3,12 @@
 manifest:
   version: 1.0
 
-{% if (newfilesinpr | match(term="hello") | nope) %}
-{% set ticketid = "yo" %}
+{% set misslist = [] %}
+{% for pattern in terraform %}
+{% if (newfilesinpr | match(term=pattern) | nope) %}
+{% set misslist = misslist + [pattern+' '] %}
 {% endif %}
+{% endfor %} 
 
 automations:
   comment_issue_tracker:
@@ -38,3 +41,16 @@ provider: jira
 
 ticketidfromtitle: {{pr.title | capture(regex=tracker[provider].pattern)}}
 ticketidfrombranch: {{branch.name | capture(regex=tracker[provider].pattern)}}
+
+
+resources:
+  module_directory: 'modules'
+terraform:
+  - main.tf
+  - outputs.tf
+  - providers.tf
+is:
+  mainfile: {{newfilesinpr | match(term = "main.tf") | some}}
+  mainfilenotinroot: {{source.diff.files | map(attr='original_file') | match(term = "main.tf") | nope }}
+newfilesinpr:
+  {{ branch.diff.files_metadata | map(attr='new_file')}}
