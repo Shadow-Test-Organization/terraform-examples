@@ -3,38 +3,42 @@
 manifest:
   version: 1.0
 
-{% if (has.ticket_in_title) %}
-{% set ticketid = pr.title %}
+{% set misslist = [] %}
+{% for pattern in terraform %}
+{% if (newfilesinpr | match(term=pattern) | nope) %}
+{% set misslist = misslist + [pattern+' '] %}
 {% endif %}
+{% endfor %} 
 
 automations:
-  comment_issue_tracker:
-    if:
-      - {{ has.ticket_in_title or has.ticket_in_branch }}
+  review_new_terraform_module:
+    if: 
+      - {{misslist | match(regex=r/.*/) | some}}
+      - {{is.mainfile and is.mainfilenotinroot }}
     run:
       - action: add-comment@v1
         args:
-          comment: Issue Tracker Link Reference - [{{ticketid}}]({{tracker[provider].baseurl}}{{ticketid}})
+          comment: |
+            New terraform modules must contain all required components before merging. Please update your PR with the required components and gitStream will automatically remove this comment once completed.
 
-has:
-  ticket_in_title: {{ pr.title | includes(regex=tracker[provider].pattern) }}
-  ticket_in_branch: {{ branch.name | includes(regex=tracker[provider].pattern) }}
+            Here are the required components, {{misslist}} should be customized appropriately:
+            my_module/
+            ├── main.tf
+            ├── outputs.tf
+            ├── providers.tf
+      - action: add-label@v1
+        args:
+          label: '⚠️ Missing Terraform Components'
+          color: '#FFA500'
 
-tracker:
-  jira:
-    baseurl: https://testorg.atlassian.net/browse/
-    pattern: r/\b[A-Za-z]+-\d+\b/
-  asana:
-    baseurl: https://app.asana.com/0/0/0/
-    pattern: r/asana-(\d+)/
-  azure:
-    baseurl: https://dev.azure.com/testorg/testproj/_workitems/
-    pattern: r/(\w+)-(\w+)-(\d+)/
-  shortcut:
-    baseurl: https://app.shortcut.com/testorg/story/
-    pattern: r/(\w+)\/sc-(\d+)/
-
-provider: jira
-
-ticketidfromtitle: {{pr.title | capture(regex=tracker[provider].pattern)}}
-ticketidfrombranch: {{branch.name | capture(regex=tracker[provider].pattern)}}
+resources:
+  module_directory: 'modules'
+terraform:
+  - main.tf
+  - outputs.tf
+  - providers.tf
+is:
+  mainfile: {{newfilesinpr | match(term = "main.tf") | some}}
+  mainfilenotinroot: {{source.diff.files | map(attr='original_file') | match(term = "main.tf") | nope }}
+newfilesinpr:
+  {{ branch.diff.files_metadata | map(attr='new_file')}}
