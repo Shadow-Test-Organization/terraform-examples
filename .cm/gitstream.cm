@@ -5,7 +5,7 @@ manifest:
 
 {% set misslist = [] %}
 {% for ticket in tickets %}
-{% if (ticket | match(regex=r/.+/) | some) %}
+{% if (ticket | includes(regex=r/.+/) | some) %}
 {% set ticketid = ticket %}
 {% endif %}
 {% endfor %} 
