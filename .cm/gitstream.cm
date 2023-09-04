@@ -4,9 +4,9 @@ manifest:
   version: 1.0
 
 {% set misslist = [] %}
-{% for pattern in terraform %}
-{% if (newfilesinpr | match(term=pattern) | nope) %}
-{% set misslist = misslist + [pattern+' '] %}
+{% for ticket in tickets %}
+{% if (ticket | match(regex=r/.+/) | some) %}
+{% set ticketid = ticket %}
 {% endif %}
 {% endfor %} 
 
@@ -39,8 +39,9 @@ tracker:
 
 provider: jira
 
-ticketidfromtitle: {{pr.title | capture(regex=tracker[provider].pattern)}}
-ticketidfrombranch: {{branch.name | capture(regex=tracker[provider].pattern)}}
+tickets:
+  - {{pr.title | capture(regex=tracker[provider].pattern)}}
+  - {{branch.name | capture(regex=tracker[provider].pattern)}}
 
 
 resources:
