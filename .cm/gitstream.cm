@@ -17,7 +17,7 @@ automations:
     run:
       - action: add-comment@v1
         args:
-          comment: Issue Tracker Link Reference - [{{ticketid}}]({{tracker[provider].baseurl}}{{ticketid}}) {{tickets}}
+          comment: Issue Tracker Link - [{{ticketid}}]({{tracker[provider].baseurl}}{{ticketid}})
 
 has:
   ticket_in_title: {{ pr.title | includes(regex=tracker[provider].pattern) }}
