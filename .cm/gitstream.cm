@@ -3,9 +3,8 @@
 manifest:
   version: 1.0
 
-{% set misslist = [] %}
 {% for ticket in tickets %}
-{% if (ticket | includes(regex=r/.+/) | some) %}
+{% if (ticket | includes(regex=r/.+/)) %}
 {% set ticketid = ticket %}
 {% endif %}
 {% endfor %} 
