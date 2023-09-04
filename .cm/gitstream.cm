@@ -3,7 +3,7 @@
 manifest:
   version: 1.0
 
-{% if has.ticket_in_title %}
+{% if (has.ticket_in_title) %}
 {% set ticketid = pr.title %}
 {% endif %}
 
