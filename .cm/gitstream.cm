@@ -3,13 +3,12 @@
 manifest:
   version: 1.0
 
-{% set check_automation_page_checklist_directory = false %}
-{% if ((newfilesinpr | match(term="docs/automations/integrations") | every)) or (((newfilesinpr | match(term="docs/automations/standard") | every))) %}
-{% set check_automation_page_checklist_directory = true %}
-{% endif %}
-
 automations:
-
+  {% set checkautomationpagechecklistdirectory = "" %}
+  {% if ((newfilesinpr | match(term="docs/automations/integrations") | every)) or (((newfilesinpr | match(term="docs/automations/standard") | every))) %}
+  {% set checkautomationpagechecklistdirectory = "x" %}
+  {% endif %}
+  
   automation_page_checklist:
     if:
       - {{newfilesinpr | match(term="docs/automations/") | some}}
@@ -17,7 +16,7 @@ automations:
       - action: add-comment@v1
         args:
           comment: |
-            - [x] All Files are Under given name {{check_automation_page_checklist_directory}}
+            - [{{checkautomationpagechecklistdirectory}}] All Files are Under given name
 
 newfilesinpr:
   {{ branch.diff.files_metadata | map(attr='new_file')}}
